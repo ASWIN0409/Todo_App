@@ -11,7 +11,7 @@ from .serializers import TodoSerializer
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_todos(request):
-    todos = Todo.objects.all()
+    todos = Todo.objects.all().order_by('id')
     serializer = TodoSerializer(todos, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
