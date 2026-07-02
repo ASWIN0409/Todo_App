@@ -1,11 +1,12 @@
 import './App.css'
+import Routing from './routing/Routing'
 
 function App() {
 
   return (
-    <>
-      <h1 className='bg-gray-800 text-white p-4 text-center font-extrabold text-4xl'>My Todo App</h1>
-    </>
+    <div className='bg-yellow-100 h-screen'>
+      <Routing />
+    </div>
   )
 }
 
