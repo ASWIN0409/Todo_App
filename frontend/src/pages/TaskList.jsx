@@ -1,23 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import { useTodo } from "../context/TodoContext";
+import { useState } from "react";
 
 function TaskList() {
 
   const navigate = useNavigate();
 
-  const { tasks, toggleTask, deleteTask } = useTodo();
+  const { tasks, updateTask, toggleTask, deleteTask } = useTodo();
 
-  // const handleTodoUpdate = async (id) => {
-  //   await updateTask(id);
-  // }
+  // updating task
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
 
-  const handleTodoToggle = async (id) => {
-    await toggleTask(id);
-  }
+  const handleTodoUpdate = async (task) => {
+    await updateTask(task.id, {
+      title: editingTaskId === task.id
+        ? editTitle
+        : task.title,
 
-  const handleTodoDelete = async (id) => {
-    await deleteTask(id);
-  }
+      description: editingTaskId === task.id
+        ? editDescription
+        : task.description,
+    });
+    toggleTask(task.id)
+    setEditingTaskId(null);
+    setEditTitle("");
+    setEditDescription("");
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -40,26 +50,52 @@ function TaskList() {
             <div
               key={task.id}
               className="
-                bg-white
-                rounded-3xl
-                p-6
-                shadow-lg
-                border
-                border-gray-100
-                transition-all
-                duration-300
-                hover:-translate-y-1
-                hover:shadow-2xl
-              "
+                  bg-white
+                  rounded-3xl
+                  p-6
+                  shadow-lg
+                  border
+                  border-gray-100
+                  transition-all
+                  duration-300
+                  hover:-translate-y-1
+                  hover:shadow-2xl
+                  flex
+                  flex-col
+  "
             >
               {/* Header */}
               <div className="flex justify-between items-start gap-4">
-                <h3 className={`text-xl font-bold text-gray-800 ${task.completed ? "line-through text-gray-400" : ""}`}>
-                  {task.title}
-                </h3>
+                {editingTaskId === task.id ?
+                  (
+                    <input
+                      autoFocus
+                      type="text"
+                      name='title'
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full border rounded-lg p-2"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleTodoUpdate(task);
+                        }
+                      }}
+                    />
+                  ) : (
+                    <h3
+                      onClick={() => {
+                        setEditingTaskId(task.id);
+                        setEditTitle(task.title);
+                        setEditDescription(task.description);
+                      }}
+                      className={`text-xl font-bold text-gray-800 ${task.completed ? "line-through text-gray-400" : ""}`}>
+                      {task.title}
+                    </h3>
+                  )
+                }
 
                 <span
-                  onClick={() => handleTodoToggle(task.id)}
+                  onClick={() => toggleTask(task.id)}
                   className={`cursor-pointer px-3 py-1 rounded-full text-sm font-semibold ${task.completed
                     ? "bg-green-100 text-green-700"
                     : "bg-yellow-100 text-yellow-700"
@@ -70,30 +106,38 @@ function TaskList() {
               </div>
 
               {/* Description */}
-              <p className={`text-gray-600 mt-4 ${task.completed ? "line-through text-gray-200" : ""}`}>
-                {task.description}
-              </p>
+              {editingTaskId === task.id ?
+                (
+                  <textarea
+                    name='description'
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    className="w-full border rounded-lg p-2 mt-4 resize-none"
+                    rows={3}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleTodoUpdate(task);
+                      }
+                    }}
+                  ></textarea>
+                ) : (
+                  <p
+                    onClick={() => {
+                      setEditingTaskId(task.id);
+                      setEditTitle(task.title);
+                      setEditDescription(task.description);
+                    }}
+                    className={`text-gray-600 mt-4 break-words ${task.completed ? "line-through text-gray-200" : ""}`}>
+                    {task.description}
+                  </p>
+                )
+              }
 
               {/* Buttons */}
-              <div className="flex gap-3 mt-6">
-                <button
-                  // onClick={() => handleTodoUpdate(task.id)}
-                  className="
-                    flex-1
-                    bg-indigo-600
-                    text-white
-                    py-2.5
-                    rounded-xl
-                    font-medium
-                    hover:bg-indigo-700
-                    transition
-                  "
-                >
-                  Edit
-                </button>
+              <div className="flex gap-3 mt-auto pt-6">
 
                 <button
-                  onClick={() => handleTodoDelete(task.id)}
+                  onClick={() => deleteTask(task.id)}
                   className="
                     flex-1
                     bg-red-500

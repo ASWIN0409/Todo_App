@@ -26,15 +26,15 @@ export default function TodoProvider({ children }) {
         }
     };
 
-    // const updateTask = async = (id) => {
-    //     try {
-    //         const response = await axiosInstance.put(`api/todos/edit/${id}/`, id);
-    //  await fetchTodos();
-    //         return response.data;
-    //     } catch (error) {
-    //         console.log(error.message);
-    //     }
-    // };
+    const updateTask = async (id, task) => {
+        try {
+            const response = await axiosInstance.put(`api/todos/edit/${id}/`, task);
+            await fetchTodos();
+            return response.data;
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
     const toggleTask = async (id) => {
         try {
@@ -57,7 +57,7 @@ export default function TodoProvider({ children }) {
     };
 
     return (
-        <TodoContext.Provider value={{ tasks, fetchTodos, addNewTask, toggleTask, deleteTask }}>
+        <TodoContext.Provider value={{ tasks, fetchTodos, addNewTask, updateTask, toggleTask, deleteTask }}>
             {children}
         </TodoContext.Provider>
     );

@@ -12,8 +12,8 @@ function TaskForm() {
     });
 
     const formSubmitHandler = async (e) => {
-        if (!formData.title.trim() || !formData.description.trim()) return;
         e.preventDefault();
+        if (!formData.title.trim() || !formData.description.trim()) return;
         await addNewTask(formData);
         setFormData({
             title: "",
