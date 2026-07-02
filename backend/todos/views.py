@@ -15,7 +15,6 @@ def get_todos(request):
     serializer = TodoSerializer(todos, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 # Create todo data - 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -34,7 +33,6 @@ def delete_todo(request, pk):
     todo.delete()
     return Response({'message': 'Task deleted successfully'}, status=status.HTTP_200_OK)
 
-
 # Update todo data - 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([AllowAny])
@@ -48,7 +46,6 @@ def update_todo(request, pk):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
 
 # Update todo toggle data - 
 @api_view(['PATCH'])
