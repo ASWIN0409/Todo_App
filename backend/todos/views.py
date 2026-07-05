@@ -9,35 +9,35 @@ from .serializers import TodoSerializer
 
 # Get todo data - 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_todos(request):
-    todos = Todo.objects.all().order_by('id')
+    todos = Todo.objects.filter(user=request.user).order_by('id')
     serializer = TodoSerializer(todos, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Create todo data - 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def create_todo(request):
     serializer = TodoSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Delete todo data - 
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def delete_todo(request, pk):
-    todo = get_object_or_404(Todo, pk=pk)
+    todo = get_object_or_404(Todo, pk=pk, user=request.user)
     todo.delete()
     return Response({'message': 'Task deleted successfully'}, status=status.HTTP_200_OK)
 
 # Update todo data - 
 @api_view(['PUT', 'PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_todo(request, pk):
-    todo = get_object_or_404(Todo, pk=pk)
+    todo = get_object_or_404(Todo, pk=pk, user=request.user)
     if request.method == 'PUT':
         serializer = TodoSerializer(todo, data=request.data)
     else:
@@ -49,9 +49,9 @@ def update_todo(request, pk):
 
 # Update todo toggle data - 
 @api_view(['PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def toggle_todo(request, pk):
-    todo = get_object_or_404(Todo, pk=pk)
+    todo = get_object_or_404(Todo, pk=pk, user=request.user)
     todo.completed = not todo.completed
     todo.save()
     return Response(status=status.HTTP_202_ACCEPTED)
