@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'email']
+        fields = ['id', 'username', 'email']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['name', 'email', 'password', 'password2']
+        fields = ['username', 'email', 'password', 'password2']
 
     def validate(self, data):
         if data['password'] != data['password2']:
