@@ -139,6 +139,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    "https://todo-app-xi-two-19.vercel.app",
 ]
 
 REST_FRAMEWORK = {
