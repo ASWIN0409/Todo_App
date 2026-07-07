@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -90,6 +91,9 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 
